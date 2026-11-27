@@ -63,6 +63,9 @@ local function askAI(history)
 	end)
 	if success and result.StatusCode == 200 then
 		result.Body = HttpService:JSONDecode(result.Body)
+		if not result.Body.choices or not result.Body.choices[1] then
+			return "ครูไม่ได้เข้าใจคุณ ลองพิมพ์ใหม่ดูนะคะ"
+		end
 		local content = result.Body.choices[1].message.content
 		if content then
 			return content
@@ -113,10 +116,10 @@ AskH2O.OnServerEvent:Connect(function(player, message)
 		table.remove( history, 1)
 	end
 	print(#history)
-	NPCLabel.Text = "อืม...."                     -- ① ขึ้นป้ายว่ากำลังคิด 
-	local reply = askAI(history)                -- ② ตู้ 1: ถาม AI
-	local safeReply = filterText(reply, player)      -- ③ ตู้ 2: กรองคำตอบ
-	NPCLabel.Text = safeReply                       -- ④ เอาข้อความที่กรองแล้วขึ้นป้าย
+	NPCLabel.Text = "อืม...."                    
+	local reply = askAI(history)               
+	local safeReply = filterText(reply, player)      
+	NPCLabel.Text = safeReply                       
 end)
 
 
